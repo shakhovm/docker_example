@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dash-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dash-app
+  template:
+    metadata:
+      labels:
+        app: dash-app
+    spec:
+      containers:
+      - name: dash-app
+        image: exampleregistry12345.azurecr.io/dash-app:latest
+        ports:
+        - containerPort: 8050
+      imagePullSecrets:
+      - name: acr-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dash-app-service
+spec:
+  selector:
+    app: dash-app
+  ports:
+    - protocol: TCP
+      port: 8050
+      targetPort: 8050
+  type: LoadBalancer
+
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: dash-app
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: dash-app
+#   ports:
+#   - port: 80
+#     targetPort: 8080
+#   type: LoadBalancer
+  
+
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: store-front
+# spec:
+#   ports:
+#   - port: 80
+#     targetPort: 8080
+#   selector:
+#     app: store-front
+#   type: LoadBalancer
